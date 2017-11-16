@@ -219,6 +219,7 @@ class App extends Component {
               </div>
             }
           </div>
+          <p className="text-right">created by <a href="https://github.com/komcal/ip-subnet-cal" target="_blank" rel="noopener noreferrer">komcal</a></p>
         </div>
       </div>
     );
