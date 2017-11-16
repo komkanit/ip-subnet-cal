@@ -113,7 +113,7 @@ class App extends Component {
                   }
                 </select>
               </div>
-              <button className="btn btn-default" onClick={this.calculateIp}>submit</button>
+              <button className="btn btn-default" onClick={this.calculateIp}>Calculate</button>
             </div>
             {
               this.state.find &&
