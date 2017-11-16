@@ -30,6 +30,8 @@ const binaryIpToDecimal = binary =>
   [0, 0, 0, 0].map((zero, index) => parseInt(binary.substr(index * 8, 8), 2))
   .join('.');
 
+const decimalIp = ip => parseInt(decimalIpToBinary(ip), 2);
+
 export const ipToNetAddress = (ip, subnet) => {
   const binaryIp = decimalIpToBinary(ip)
   .split('')
@@ -46,4 +48,21 @@ export const ipToBroadcast = (ip, subnet) => {
   return binaryIpToDecimal(binaryIp);
 }
 
-export const plus = (x, y) => x + y;
+export const usableHost = (ip, mark) => {
+  const netAddress = ipToNetAddress(ip, mark);
+  const broadCast = ipToBroadcast(ip, mark);
+  const decimalNetAddress = decimalIp(netAddress);
+  const decimalBroadCast = decimalIp(broadCast);
+  let usableHostTotal = decimalBroadCast - decimalNetAddress - 1;
+  const totalHost = usableHostTotal + 2;
+  if(decimalBroadCast === decimalNetAddress) {
+    usableHostTotal = 0;
+  }
+  const usableHost = {
+    start: binaryIpToDecimal((decimalNetAddress + 1).toString(2)),
+    end: binaryIpToDecimal((decimalBroadCast - 1).toString(2)),
+    usableHostTotal,
+    totalHost,
+  }
+  return usableHost;
+}
