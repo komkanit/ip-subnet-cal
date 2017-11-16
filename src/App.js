@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import classNames from 'classnames';
 import AllPossibleTable from './AllPossibleTable';
 import {
   networkClassSplit,
@@ -24,7 +25,7 @@ class App extends Component {
     classIp: 'any',
     subnet: [],
     mask: 32,
-
+    changed: true,
   }
   componentDidMount = () => {
     this.setState({
@@ -34,18 +35,21 @@ class App extends Component {
   onInputChange = (e) => {
     this.setState({
       ip: e.target.value,
+      changed: true,
     });
   }
   setClass = (e) => {
     this.setState({
       classIp: e.target.value,
       subnet: networkClassSplit(e.target.value),
+      changed: true,
     });
   }
   calculateIp = () => {
     const { ip, mask } = this.state;
     if(isIPv4(ip)) {
       this.setState({
+        changed: false,
         find: true,
         netAddress: ipToNetAddress(ip, mask),
         usableHost: usableHost(ip, mask),
@@ -62,6 +66,7 @@ class App extends Component {
   onSelectChange = (e) => {
     this.setState({
       mask: e.target.value,
+      changed: true,
     });
   }
   render() {
@@ -113,7 +118,11 @@ class App extends Component {
                   }
                 </select>
               </div>
-              <button className="btn btn-default" onClick={this.calculateIp}>Calculate</button>
+              <button
+                className={classNames('btn', this.state.changed ? 'btn-success' : 'btn-default')}
+                onClick={this.calculateIp}>
+                Calculate
+              </button>
             </div>
             {
               this.state.find &&

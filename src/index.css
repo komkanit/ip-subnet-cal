@@ -6,3 +6,7 @@ body {
 .input-field {
   margin-bottom: 20px;
 }
+.btn {
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+}
