@@ -1,17 +1,12 @@
 import { expect } from 'chai';
-import { plus,
+import {
   convertToSubnet,
   networkClassSplit,
   ipToNetAddress,
   ipToBroadcast,
+  usableHost,
+  wildCard,
 } from './helper';
-
-describe('test plus', () => {
-  it('should plus number', () => {
-    expect(plus(1, 2)).to.equal(3);
-    expect(plus(0, 2)).to.equal(2);
-  })
-})
 
 describe('test convertToSubnet', () => {
   it('should convert to subnet', () => {
@@ -47,11 +42,51 @@ describe('ipToNetAddress test', () => {
     expect(ipToNetAddress('159.108.12.111', 28)).to.equal('159.108.12.96');
     expect(ipToNetAddress('159.228.12.111', 13)).to.equal('159.224.0.0');
     expect(ipToNetAddress('158.108.12.34', 21)).to.equal('158.108.8.0');
+    expect(ipToNetAddress('255.255.255.255', 32)).to.equal('255.255.255.255');
+    expect(ipToNetAddress('255.255.255.255', 27)).to.equal('255.255.255.224');
   });
 })
 
 describe('ipToBroadcast test', () => {
   it('should show broad case address', () => {
     expect(ipToBroadcast('158.108.12.34', 21)).to.equal('158.108.15.255');
+    expect(ipToBroadcast('255.255.255.255', 21)).to.equal('255.255.255.255');
+    expect(ipToBroadcast('255.255.255.255', 32)).to.equal('255.255.255.255');
+  });
+})
+
+describe('usableHost test', () => {
+  it('should show usable host', () => {
+    const expected = {
+      start: '158.108.0.1',
+      end: '158.108.1.254',
+      usableHostTotal: 510,
+      totalHost: 512,
+    };
+    expect(usableHost('158.108.1.24', 23).start).to.equal(expected.start);
+    expect(usableHost('158.108.1.24', 23).end).to.equal(expected.end);
+    expect(usableHost('158.108.1.24', 23).usableHostTotal).to.equal(expected.usableHostTotal);
+    expect(usableHost('158.108.1.24', 23).totalHost).to.equal(expected.totalHost);
+  });
+  it('should show usableHost total 0 when start, end same', () => {
+    expect(usableHost('158.108.1.24', 32).start).to.equal(usableHost('158.108.1.24', 32).start);
+    expect(usableHost('158.108.1.24', 32).usableHostTotal).to.equal(0);
+    expect(usableHost('158.108.1.24', 32).totalHost).to.equal(1);
+  })
+  it('should have 2 totalHost', () => {
+    expect(usableHost('158.108.1.24', 31).start).to.equal(usableHost('158.108.1.24', 31).start);
+    expect(usableHost('158.108.1.24', 31).usableHostTotal).to.equal(0);
+    expect(usableHost('158.108.1.24', 31).totalHost).to.equal(2);
+  })
+})
+
+describe('wildCard test', () => {
+  it('should show wildcard mask', () => {
+    expect(wildCard(15)).to.equal('0.1.255.255');
+    expect(wildCard(1)).to.equal('127.255.255.255');
+
+  });
+  it('should show 0', () => {
+    expect(wildCard(32)).to.equal('0.0.0.0');
   });
 })

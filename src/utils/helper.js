@@ -66,3 +66,8 @@ export const usableHost = (ip, mark) => {
   }
   return usableHost;
 }
+
+export const wildCard = (mark) => {
+  const binary = '0'.repeat(mark) + '1'.repeat(32 - mark);
+  return binaryIpToDecimal(binary);
+}
