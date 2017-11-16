@@ -1,5 +1,6 @@
 {
   "name": "subnet",
+  "homepage": "https://komcal.github.io/ip-subnet-cal",
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
@@ -8,10 +9,13 @@
   "dependencies": {
     "chai": "^4.1.2",
     "classnames": "^2.2.5",
+    "gh-pages": "^1.0.0",
     "react": "^16.1.1",
     "react-dom": "^16.1.1"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",

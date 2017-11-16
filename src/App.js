@@ -121,7 +121,7 @@ class App extends Component {
               <button
                 className={classNames('btn', this.state.changed ? 'btn-success' : 'btn-default')}
                 onClick={this.calculateIp}>
-                Calculate
+                Calculate{!this.state.changed && 'd!'}
               </button>
             </div>
             {
