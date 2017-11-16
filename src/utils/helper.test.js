@@ -6,6 +6,7 @@ import {
   ipToBroadcast,
   usableHost,
   wildCard,
+  binarySubnet,
 } from './helper';
 
 describe('test convertToSubnet', () => {
@@ -89,4 +90,12 @@ describe('wildCard test', () => {
   it('should show 0', () => {
     expect(wildCard(32)).to.equal('0.0.0.0');
   });
+})
+
+describe('binarySubnet test', () => {
+  it('should show binarySubnet', () => {
+    expect(binarySubnet(32)).to.equal('11111111.11111111.11111111.11111111');
+    expect(binarySubnet(1)).to.equal('10000000.00000000.00000000.00000000');
+    expect(binarySubnet(18)).to.equal('11111111.11111111.11000000.00000000');
+  })
 })

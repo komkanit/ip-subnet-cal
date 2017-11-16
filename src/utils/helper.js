@@ -48,9 +48,9 @@ export const ipToBroadcast = (ip, subnet) => {
   return binaryIpToDecimal(binaryIp);
 }
 
-export const usableHost = (ip, mark) => {
-  const netAddress = ipToNetAddress(ip, mark);
-  const broadCast = ipToBroadcast(ip, mark);
+export const usableHost = (ip, mask) => {
+  const netAddress = ipToNetAddress(ip, mask);
+  const broadCast = ipToBroadcast(ip, mask);
   const decimalNetAddress = decimalIp(netAddress);
   const decimalBroadCast = decimalIp(broadCast);
   let usableHostTotal = decimalBroadCast - decimalNetAddress - 1;
@@ -67,7 +67,13 @@ export const usableHost = (ip, mark) => {
   return usableHost;
 }
 
-export const wildCard = (mark) => {
-  const binary = '0'.repeat(mark) + '1'.repeat(32 - mark);
+export const wildCard = (mask) => {
+  const binary = '0'.repeat(mask) + '1'.repeat(32 - mask);
   return binaryIpToDecimal(binary);
+}
+export const binarySubnet = (mask) => {
+  const subnetIp = convertToSubnet(mask);
+  const binaryIp = decimalIpToBinary(subnetIp);
+  return [0, 0, 0, 0].map((zero, index) => binaryIp.substr(index * 8, 8))
+  .join('.');
 }
