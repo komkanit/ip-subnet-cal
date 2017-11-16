@@ -7,6 +7,12 @@ import {
   usableHost,
   wildCard,
   binarySubnet,
+  ipClass,
+  isPrivate,
+  toDecimal,
+  getAllPossible,
+  isIPv4,
+  getPossibleText,
 } from './helper';
 
 describe('test convertToSubnet', () => {
@@ -97,5 +103,93 @@ describe('binarySubnet test', () => {
     expect(binarySubnet(32)).to.equal('11111111.11111111.11111111.11111111');
     expect(binarySubnet(1)).to.equal('10000000.00000000.00000000.00000000');
     expect(binarySubnet(18)).to.equal('11111111.11111111.11000000.00000000');
+  })
+})
+
+describe('ipClass test', () => {
+  it('should show type A', () => {
+    expect(ipClass(7)).to.equal('ANY');
+    expect(ipClass(1)).to.equal('ANY');
+  })
+  it('should show type A', () => {
+    expect(ipClass(8)).to.equal('A');
+    expect(ipClass(15)).to.equal('A');
+  })
+  it('should show type B', () => {
+    expect(ipClass(16)).to.equal('B');
+    expect(ipClass(23)).to.equal('B');
+  })
+  it('should show type C', () => {
+    expect(ipClass(24)).to.equal('C');
+    expect(ipClass(32)).to.equal('C');
+  })
+})
+
+describe('isPrivate test', () => {
+  it('ip should private', () => {
+    expect(isPrivate('172.16.0.0')).to.equal(true);
+    expect(isPrivate('172.16.225.20')).to.equal(true);
+  })
+  it('ip should public', () => {
+    expect(isPrivate('172.60.225.20')).to.equal(false);
+    expect(isPrivate('255.255.255.0')).to.equal(false);
+  })
+});
+
+describe('toDecimal test', () => {
+  it('should show decimal ip', () => {
+    expect(toDecimal('255.255.255.0')).to.equal(4294967040);
+  })
+})
+
+describe('getAllPossible test', () => {
+  it('should get all possible', () => {
+    const allPossible = getAllPossible('158.108.10.35', 1);
+    const expected = [
+      {
+        netAddress: '0.0.0.0',
+        broadcast: '127.255.255.255',
+        usableHost: {
+          start: '0.0.0.1',
+          end: '127.255.255.254',
+        },
+      },
+      {
+        netAddress: '128.0.0.0',
+        broadcast: '255.255.255.255',
+        usableHost: {
+          start: '128.0.0.1',
+          end: '255.255.255.254',
+        },
+      }
+    ]
+    allPossible.map((possible, index) => {
+      expect(possible.netAddress).to.equal(expected[index].netAddress);
+      expect(possible.broadcast).to.equal(expected[index].broadcast);
+      expect(possible.usableHost.start).to.equal(expected[index].usableHost.start);
+      expect(possible.usableHost.end).to.equal(expected[index].usableHost.end);
+    })
+    // getAllPossible('158.108.10.35', 14);
+  })
+})
+
+describe('isIPv4 test', () => {
+  it('should return true', () => {
+    expect(isIPv4('0.0.0.0')).to.equal(true);
+    expect(isIPv4('255.255.255.255')).to.equal(true);
+    expect(isIPv4('158.108.10.34')).to.equal(true);
+  })
+  it('should return false', () => {
+    expect(isIPv4('0.0.0')).to.equal(false);
+    expect(isIPv4('0.0.vv.aa')).to.equal(false);
+    expect(isIPv4('-14.0.0.10')).to.equal(false);
+  })
+})
+
+describe('getPossibleText test', () => {
+  it('should show collect text', () => {
+    expect(getPossibleText('158.108.1.1', 12)).to.equal('All Possible /12 Networks for 158.*.*.*');
+    expect(getPossibleText('158.108.1.1', 32)).to.equal('All Possible /32 Networks for 158.108.1.*');
+    expect(getPossibleText('158.108.1.1', 1)).to.equal('All Possible /1 Networks for *.*.*.*');
   })
 })
